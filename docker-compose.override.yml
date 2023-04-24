@@ -13,7 +13,7 @@ services:
       #- /srv/app/vendor
     environment:
       # See https://xdebug.org/docs/all_settings#mode
-      XDEBUG_MODE: 'debug' # "${XDEBUG_MODE:-off}"
+      XDEBUG_MODE: 'debug,coverage' # "${XDEBUG_MODE:-off}"
       PHP_IDE_CONFIG: 'serverName=project'
       PHP_CS_FIXER_IGNORE_ENV: 1
     extra_hosts:

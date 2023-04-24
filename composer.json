@@ -84,7 +84,10 @@
         "php-cs-fix": "./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --verbose --using-cache=no --config=.php-cs-fixer.dist.php",
         "php-cs-try": "./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --config=.php-cs-fixer.dist.php",
         "phpstan": "./tools/phpstan/vendor/bin/phpstan analyze --no-progress",
-        "phpunit": "./vendor/bin/phpunit",
+        "phpunit": [
+            "Composer\\Config::disableProcessTimeout",
+            "./vendor/bin/phpunit --no-coverage"
+        ],
         "statics": [
             "@phpstan",
             "@php-cs-try"

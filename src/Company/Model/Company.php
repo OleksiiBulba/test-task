@@ -26,12 +26,12 @@ class Company implements \Stringable
         return $this;
     }
 
-    public function getName(): string
+    public function getCompanyName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setCompanyName(string $name): self
     {
         $this->name = $name;
 

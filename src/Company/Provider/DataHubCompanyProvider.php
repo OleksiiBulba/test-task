@@ -12,6 +12,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 readonly class DataHubCompanyProvider implements CompanyProviderInterface
 {
+    const API_URL = 'https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_json/data/a5bc7580d6176d60ac0b2142ca8d7df6/nasdaq-listed_json.json';
+
     public function __construct(
         private HttpClientInterface $client,
         private SerializerInterface $serializer
@@ -23,7 +25,7 @@ readonly class DataHubCompanyProvider implements CompanyProviderInterface
      */
     public function getAllCompanies(): array
     {
-        $response = $this->client->request(Request::METHOD_GET, 'https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed_json/data/a5bc7580d6176d60ac0b2142ca8d7df6/nasdaq-listed_json.json');
+        $response = $this->client->request(Request::METHOD_GET, self::API_URL);
 
         return $this->serializer->deserialize($response->getContent(), Company::class.'[]', JsonEncoder::FORMAT);
     }
