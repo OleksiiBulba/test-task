@@ -21,7 +21,6 @@ class HistoryDataController extends AbstractController
             /** @var HistoryRequestData $historyRequestData */
             $historyRequestData = $form->getData();
 
-            // TODO: handle form submit
             $historyData = $handler->handle($historyRequestData);
         }
 

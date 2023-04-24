@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Validator\Symbol;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class HistoryRequestData
 {
     #[Assert\NotBlank]
+    #[Symbol]
     private string $symbol;
 
     #[Assert\Range(maxMessage: 'Start date should be less or equal than end date.', maxPropertyPath: 'endDate')]
