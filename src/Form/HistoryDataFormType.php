@@ -2,9 +2,9 @@
 
 namespace App\Form;
 
+use App\Form\Type\CompanySymbolType;
 use App\Model\HistoryDataRequest;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -15,12 +15,9 @@ class HistoryDataFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $symbolChoices = $options['symbol_choices'] ?? [];
         $builder
-            ->add('symbol', ChoiceType::class, [
+            ->add('symbol', CompanySymbolType::class, [
                 'required' => true,
-                'choices' => array_flip($symbolChoices),
-                'placeholder' => 0 < \count($symbolChoices) ? '' : 'Could not load symbol choices',
             ])
             ->add('startDate', DateType::class, [
                 'required' => true,
@@ -31,7 +28,7 @@ class HistoryDataFormType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('email', EmailType::class, [
-                'required' => false,
+                'required' => true,
             ])
             ->add('submit', SubmitType::class)
         ;
@@ -39,7 +36,6 @@ class HistoryDataFormType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['data_class' => HistoryDataRequest::class])
-            ->setRequired(['symbol_choices']);
+        $resolver->setDefaults(['data_class' => HistoryDataRequest::class]);
     }
 }
