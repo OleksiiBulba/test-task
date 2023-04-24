@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% block alerts %}
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }} mb-0 rounded-0">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+    {% endblock %}
+    <div class="d-flex justify-content-center" style="height: 100vh; margin-top: 30px;">
+        <div class="col-md-4 col-sm-6">
+            {% block main %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}
