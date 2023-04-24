@@ -1,0 +1,74 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\HistoricalQuotes\Fetcher;
+
+use App\HistoricalQuotes\Exception\HistoricalQuotesNotFoundException;
+use App\Model\HistoricalQuotes\Collection;
+use App\Model\HistoricalQuotes\Collection as HistoricalQuotesCollection;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
+readonly class RapidHistoricalDataFetcher implements HistoricalQuotesFetcherInterface
+{
+    const RAPID_API_HOST = 'yh-finance.p.rapidapi.com';
+    const RAPID_API_ENDPOINT_HISTORICAL_DATA = '/stock/v3/get-historical-data';
+    const RAPID_HEADER_API_KEY = 'X-RapidAPI-Key';
+    const RAPID_HEADER_API_HOST = 'X-RapidAPI-Host';
+
+    public function __construct(
+        private HttpClientInterface $client,
+        private SerializerInterface $serializer,
+        private string $rapidApiKey
+    ) {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fetchData(string $symbol, string $region = null): Collection
+    {
+        $query = ['symbol' => $symbol];
+
+        if (null !== $region) {
+            $query['region'] = $region;
+        }
+
+        try {
+            $response = $this->client->request(
+                Request::METHOD_GET,
+                self::RAPID_API_HOST.self::RAPID_API_ENDPOINT_HISTORICAL_DATA,
+                [
+                    'query' => $query,
+                    'headers' => [
+                        self::RAPID_HEADER_API_KEY => $this->rapidApiKey,
+                        self::RAPID_HEADER_API_HOST => self::RAPID_API_HOST,
+                    ],
+                ]
+            );
+        } catch (TransportExceptionInterface $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        try {
+            /** @var HistoricalQuotesCollection $historyResponseData */
+            $historyResponseData = $this->serializer->deserialize(
+                $response->getContent(),
+                HistoricalQuotesCollection::class,
+                JsonEncoder::FORMAT
+            );
+        } catch (\Throwable $e) {
+            throw new HistoricalQuotesNotFoundException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        if (null === $historyResponseData) {
+            throw new HistoricalQuotesNotFoundException();
+        }
+
+        return $historyResponseData;
+    }
+}

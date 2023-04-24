@@ -25,3 +25,7 @@ services:
 
     App\Company\Provider\CompanyProviderInterface:
         class: App\Company\Provider\DataHubCompanyProvider
+
+    App\HistoricalQuotes\Fetcher\RapidHistoricalDataFetcher:
+        arguments:
+            $rapidApiKey: '%env(RAPID_API_KEY)%'
