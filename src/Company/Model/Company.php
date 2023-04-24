@@ -40,6 +40,6 @@ class Company implements \Stringable
 
     public function __toString(): string
     {
-        return $this->symbol;
+        return sprintf('%s - %s', $this->symbol, $this->name);
     }
 }

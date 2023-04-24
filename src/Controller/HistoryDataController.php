@@ -12,10 +12,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HistoryDataController extends AbstractController
 {
-    #[Route('/', name: 'app_history_data')]
-    public function index(Request $request, CompanyProviderInterface $companyProvider): Response
+    public function __construct(private readonly CompanyProviderInterface $companyProvider)
     {
-        $form = $this->createForm(HistoryDataFormType::class, null, ['symbol_choices' => $companyProvider->getAllCompanies()]);
+    }
+
+    #[Route('/', name: 'app_history_data')]
+    public function index(Request $request): Response
+    {
+        $form = $this->createForm(HistoryDataFormType::class, null, ['symbol_choices' => $this->getSymbolChoices()]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var HistoryDataRequest $historyRequestFormData */
@@ -29,5 +33,20 @@ class HistoryDataController extends AbstractController
             'mainForm' => $form->createView(),
             'historyData' => $historyData ?? [],
         ]);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getSymbolChoices(): array
+    {
+        $companies = $this->companyProvider->getAllCompanies();
+        $symbolChoices = [];
+
+        foreach ($companies as $company) {
+            $symbolChoices[$company->getSymbol()] = (string) $company;
+        }
+
+        return $symbolChoices;
     }
 }

@@ -19,7 +19,7 @@ class HistoryDataFormType extends AbstractType
         $builder
             ->add('symbol', ChoiceType::class, [
                 'required' => true,
-                'choices' => $symbolChoices,
+                'choices' => array_flip($symbolChoices),
                 'placeholder' => 0 < \count($symbolChoices) ? '' : 'Could not load symbol choices',
             ])
             ->add('startDate', DateType::class, [
@@ -39,8 +39,7 @@ class HistoryDataFormType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'data_class' => HistoryDataRequest::class,
-        ]);
+        $resolver->setDefaults(['data_class' => HistoryDataRequest::class])
+            ->setRequired(['symbol_choices']);
     }
 }
