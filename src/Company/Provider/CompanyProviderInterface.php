@@ -10,9 +10,9 @@ use App\Company\Model\Company;
 interface CompanyProviderInterface
 {
     /**
-     * @throws CouldNotLoadCompaniesException
-     *
      * @return Company[]
+     *
+     * @throws CouldNotLoadCompaniesException
      */
     public function getAllCompanies(): array;
 }
