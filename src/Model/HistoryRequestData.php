@@ -6,7 +6,7 @@ namespace App\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class HistoryDataRequest
+class HistoryRequestData
 {
     #[Assert\NotBlank]
     private string $symbol;
@@ -26,9 +26,11 @@ class HistoryDataRequest
         return $this->symbol;
     }
 
-    public function setSymbol(string $symbol): void
+    public function setSymbol(string $symbol): self
     {
         $this->symbol = $symbol;
+
+        return $this;
     }
 
     public function getStartDate(): ?\DateTimeInterface
@@ -36,9 +38,11 @@ class HistoryDataRequest
         return $this->startDate;
     }
 
-    public function setStartDate(?\DateTimeInterface $startDate): void
+    public function setStartDate(?\DateTimeInterface $startDate): self
     {
         $this->startDate = $startDate;
+
+        return $this;
     }
 
     public function getEndDate(): ?\DateTimeInterface
@@ -46,9 +50,11 @@ class HistoryDataRequest
         return $this->endDate;
     }
 
-    public function setEndDate(?\DateTimeInterface $endDate): void
+    public function setEndDate(?\DateTimeInterface $endDate): self
     {
         $this->endDate = $endDate;
+
+        return $this;
     }
 
     public function getEmail(): string
@@ -56,8 +62,10 @@ class HistoryDataRequest
         return $this->email;
     }
 
-    public function setEmail(string $email): void
+    public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
     }
 }

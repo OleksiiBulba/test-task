@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Company\Provider;
 
+use App\Company\Exception\CouldNotLoadCompaniesException;
 use App\Company\Model\Company;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -25,8 +26,12 @@ readonly class DataHubCompanyProvider implements CompanyProviderInterface
      */
     public function getAllCompanies(): array
     {
-        $response = $this->client->request(Request::METHOD_GET, self::API_URL);
+        try {
+            $response = $this->client->request(Request::METHOD_GET, self::API_URL);
 
-        return $this->serializer->deserialize($response->getContent(), Company::class.'[]', JsonEncoder::FORMAT);
+            return $this->serializer->deserialize($response->getContent(), Company::class . '[]', JsonEncoder::FORMAT);
+        } catch (\Throwable $e) {
+            throw new CouldNotLoadCompaniesException(sprintf('Company list is not available: %s', $e->getMessage()), $e->getCode(), $e);
+        }
     }
 }
