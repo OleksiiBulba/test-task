@@ -16,19 +16,19 @@ class HistoryDataFormType extends AbstractType
     {
         $builder
             ->add('symbol', ChoiceType::class, [
-                'required'  => true,
+                'required' => true,
                 'choices' => [/* TODO: add companies symbols */],
             ])
             ->add('startDate', DateType::class, [
-                'required'  => true,
+                'required' => true,
                 'widget' => 'single_text',
             ])
             ->add('endDate', DateType::class, [
-                'required'  => true,
+                'required' => true,
                 'widget' => 'single_text',
             ])
             ->add('email', EmailType::class, [
-                'required'  => false,
+                'required' => false,
             ])
             ->add('submit', SubmitType::class)
         ;

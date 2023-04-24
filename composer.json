@@ -73,9 +73,9 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-text",
-        "php-cs-fix": "./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --verbose --using-cache=no src tests",
-        "php-cs-try": "./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no src tests",
-        "phpstan": "./vendor/bin/phpstan analyze --no-progress",
+        "php-cs-fix": "./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --verbose --using-cache=no --config=.php-cs-fixer.dist.php",
+        "php-cs-try": "./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --config=.php-cs-fixer.dist.php",
+        "phpstan": "./tools/phpstan/vendor/bin/phpstan analyze --no-progress",
         "phpunit": "./vendor/bin/phpunit",
         "statics": [
             "@phpstan",
