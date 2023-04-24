@@ -15,10 +15,12 @@ class HistoryDataFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $symbolChoices = $options['symbol_choices'] ?? [];
         $builder
             ->add('symbol', ChoiceType::class, [
                 'required' => true,
-                'choices' => [/* TODO: add companies symbols */],
+                'choices' => $symbolChoices,
+                'placeholder' => 0 < \count($symbolChoices) ? '' : 'Could not load symbol choices',
             ])
             ->add('startDate', DateType::class, [
                 'required' => true,
