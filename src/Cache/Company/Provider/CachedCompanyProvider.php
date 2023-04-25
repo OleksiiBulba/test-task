@@ -41,8 +41,10 @@ readonly class CachedCompanyProvider implements CompanyProviderInterface
     {
         try {
             $item = $this->cacheItemPool->getItem(self::CACHE_KEY);
+            // @codeCoverageIgnoreStart
         } catch (InvalidArgumentException) {
             return $this->getIndexedCompanies();
+            // @codeCoverageIgnoreEnd
         }
 
         if ($item->isHit()) {

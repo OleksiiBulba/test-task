@@ -9,6 +9,8 @@ use App\Company\Provider\CompanyProviderInterface;
 use App\Validator\Symbol;
 use App\Validator\SymbolValidator;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Validator\Constraints\Blank;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 /**
@@ -84,5 +86,12 @@ class SymbolValidatorTest extends ConstraintValidatorTestCase
             ->setInvalidValue('AAA')
             ->assertRaised()
         ;
+    }
+
+    public function testIncorrectConstraint(): void
+    {
+        $this->expectException(UnexpectedTypeException::class);
+
+        $this->validator->validate('AAA', new Blank());
     }
 }

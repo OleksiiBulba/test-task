@@ -16,3 +16,11 @@ services:
         arguments:
             $client: '@test.Symfony\Contracts\HttpClient\HttpClientInterface'
             $rapidApiKey: '123456'
+
+    test.Symfony\Component\Mailer\MailerInterface: '@Symfony\Component\Mailer\MailerInterface'
+
+    App\EventSubscriber\HistoryResponseDataSubscriber:
+        arguments:
+            $mailer: '@test.Symfony\Component\Mailer\MailerInterface'
+            $fromAddress: 'noreply@example.com'
+            $fromName: 'no-reply'

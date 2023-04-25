@@ -10,6 +10,10 @@ use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpClient\TraceableHttpClient;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\Exception\TransportException;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\RawMessage;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class HistoricalDataControllerTest extends WebTestCase
@@ -173,5 +177,27 @@ class HistoricalDataControllerTest extends WebTestCase
         $this->assertStringContainsString('47720200', $this->kernelBrowser->getResponse()->getContent());
         $this->assertStringNotContainsString('49923000', $this->kernelBrowser->getResponse()->getContent());
         $this->assertStringNotContainsString('56007100', $this->kernelBrowser->getResponse()->getContent());
+    }
+
+    public function testDangerFlash(): void
+    {
+        $this->kernelBrowser->request(Request::METHOD_GET, '/');
+
+        $this->kernelBrowser->getContainer()->set('test.'.MailerInterface::class, new class implements MailerInterface {
+            public function send(RawMessage $message, Envelope $envelope = null): void
+            {
+                throw new TransportException('Cannot send email');
+            }
+        });
+
+        $this->kernelBrowser->submitForm('Submit', ['history_data_form' => [
+            'symbol' => 'AAPL',
+            'startDate' => '2023-04-19',
+            'endDate' => '2023-04-20',
+            'email' => 'oleksii_bulba@epam.com',
+        ]]);
+
+        $this->assertStringContainsStringIgnoringCase('alert-danger', $this->kernelBrowser->getResponse()->getContent());
+        $this->assertStringContainsStringIgnoringCase('Could not send an email notification', $this->kernelBrowser->getResponse()->getContent());
     }
 }

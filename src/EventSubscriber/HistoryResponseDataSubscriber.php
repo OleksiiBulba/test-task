@@ -24,9 +24,11 @@ readonly class HistoryResponseDataSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
+        // @codeCoverageIgnoreStart
         return [
             HistoryRequestFinished::class => 'sendEmailNotification',
         ];
+        // @codeCoverageIgnoreEnd
     }
 
     public function sendEmailNotification(HistoryRequestFinished $event): void

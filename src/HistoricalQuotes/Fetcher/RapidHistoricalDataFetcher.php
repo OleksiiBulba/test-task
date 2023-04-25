@@ -16,10 +16,10 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 readonly class RapidHistoricalDataFetcher implements HistoricalQuotesFetcherInterface
 {
-    private const RAPID_API_HOST = 'yh-finance.p.rapidapi.com';
-    private const RAPID_API_ENDPOINT_HISTORICAL_DATA = '/stock/v3/get-historical-data';
-    private const RAPID_HEADER_API_KEY = 'X-RapidAPI-Key';
-    private const RAPID_HEADER_API_HOST = 'X-RapidAPI-Host';
+    public const RAPID_API_HOST = 'yh-finance.p.rapidapi.com';
+    public const RAPID_API_ENDPOINT_HISTORICAL_DATA = '/stock/v3/get-historical-data';
+    public const RAPID_HEADER_API_KEY = 'X-RapidAPI-Key';
+    public const RAPID_HEADER_API_HOST = 'X-RapidAPI-Host';
 
     public function __construct(
         private HttpClientInterface $client,
@@ -70,10 +70,6 @@ readonly class RapidHistoricalDataFetcher implements HistoricalQuotesFetcherInte
             );
         } catch (\Throwable $e) {
             throw new HistoricalQuotesNotFoundException($e->getMessage(), $e->getCode(), $e);
-        }
-
-        if (null === $historyResponseData) {
-            throw new HistoricalQuotesNotFoundException();
         }
 
         $historyResponseData->setPrices(array_filter($historyResponseData->getPrices(), function (Price $price) {

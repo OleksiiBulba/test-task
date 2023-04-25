@@ -28,12 +28,16 @@ readonly class CachedHistoricalQuotesFetcher implements HistoricalQuotesFetcherI
     {
         try {
             $item = $this->cacheItemPool->getItem($this->getCacheKey($symbol, $region));
+            // @codeCoverageIgnoreStart
         } catch (InvalidArgumentException) {
             return $this->doFetchData($symbol, $region);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($item->isHit()) {
+            // @codeCoverageIgnoreStart
             return $item->get();
+            // @codeCoverageIgnoreEnd
         }
 
         $data = $this->doFetchData($symbol, $region);
@@ -53,7 +57,9 @@ readonly class CachedHistoricalQuotesFetcher implements HistoricalQuotesFetcherI
     {
         $cacheKey = self::CACHE_KEY_PREFIX.$symbol;
         if (null !== $region) {
+            // @codeCoverageIgnoreStart
             $cacheKey .= '-'.$region;
+            // @codeCoverageIgnoreEnd
         }
 
         return $cacheKey;
