@@ -11,10 +11,7 @@ use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -24,12 +21,9 @@ class DataHubCompanyProviderTest extends TestCase
 
     private HttpClientInterface&MockObject $httpClientMock;
 
-    private ResponseInterface&Stub $responseStub;
+    private SerializerInterface&MockObject $serializerMock;
 
-    public function getSerializer(): Serializer
-    {
-        return new Serializer([new ObjectNormalizer(), new GetSetMethodNormalizer(), new ArrayDenormalizer()], [new JsonEncoder()]);
-    }
+    private ResponseInterface&Stub $responseStub;
 
     protected function setUp(): void
     {
@@ -40,9 +34,14 @@ class DataHubCompanyProviderTest extends TestCase
 
         $this->responseStub = $this->createStub(ResponseInterface::class);
 
+        $this->serializerMock = $this->getMockBuilder(SerializerInterface::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['deserialize'])
+            ->getMockForAbstractClass();
+
         $this->model = new DataHubCompanyProvider(
             $this->httpClientMock,
-            $this->getSerializer()
+            $this->serializerMock
         );
     }
 
@@ -61,6 +60,11 @@ class DataHubCompanyProviderTest extends TestCase
         $this->responseStub->method('getContent')
             ->willReturn($serializedCompaniesList);
 
+        $this->serializerMock->expects($this->once())
+            ->method('deserialize')
+            ->with($serializedCompaniesList, Company::class.'[]', JsonEncoder::FORMAT)
+            ->willReturn($expectedCompaniesList);
+
         $this->assertEquals($expectedCompaniesList, $this->model->getAllCompanies());
     }
 
@@ -68,14 +72,14 @@ class DataHubCompanyProviderTest extends TestCase
     {
         $companiesData = [
             'OB' => 'Oleksii Bulba Ltd',
-            'GOOG' => 'Google'
+            'GOOG' => 'Google',
         ];
 
         return [
             [
                 'expectedCompaniesList' => [...self::createCompanies($companiesData)],
                 'serializedCompaniesList' => self::createSerializedCompaniesList($companiesData),
-            ]
+            ],
         ];
     }
 
@@ -89,7 +93,7 @@ class DataHubCompanyProviderTest extends TestCase
         $companies = [];
         foreach ($companiesData as $symbol => $name) {
             $companies[] = (new Company())
-                ->setCompanyName($name)
+                ->setName($name)
                 ->setSymbol($symbol);
         }
 

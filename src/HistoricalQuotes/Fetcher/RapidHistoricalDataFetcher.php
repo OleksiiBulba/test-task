@@ -62,7 +62,7 @@ readonly class RapidHistoricalDataFetcher implements HistoricalQuotesFetcherInte
              *      original 2.254300117492676 (15 digits)
              *       decoded 2.2543001174927   (13 digits).
              */
-            /** @var HistoricalQuotesCollection $historyResponseData */
+            /** @var ?HistoricalQuotesCollection $historyResponseData */
             $historyResponseData = $this->serializer->deserialize(
                 $response->getContent(),
                 HistoricalQuotesCollection::class,
