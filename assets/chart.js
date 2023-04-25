@@ -4,7 +4,7 @@
 import anychart from 'anychart';
 
 $(document).ready(function () {
-    if (0 === data.length) {
+    if ('undefined' === typeof data || 0 === data.length) {
         return;
     }
 
