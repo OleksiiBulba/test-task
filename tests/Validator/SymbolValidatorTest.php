@@ -13,9 +13,6 @@ use Symfony\Component\Validator\Constraints\Blank;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
-/**
- * @implements SymbolValidator
- */
 class SymbolValidatorTest extends ConstraintValidatorTestCase
 {
     private CompanyProviderInterface&MockObject $companyProviderMock;
