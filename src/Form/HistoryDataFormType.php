@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Form\Type\CompanySymbolType;
-use App\Model\HistoryRequestData;
+use App\Model\HistoricalDataRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -36,6 +36,6 @@ class HistoryDataFormType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['data_class' => HistoryRequestData::class]);
+        $resolver->setDefaults(['data_class' => HistoricalDataRequest::class]);
     }
 }

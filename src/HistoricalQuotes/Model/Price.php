@@ -2,29 +2,36 @@
 
 declare(strict_types=1);
 
-namespace App\Model\HistoricalQuotes;
+namespace App\HistoricalQuotes\Model;
 
+/** @codeCoverageIgnore */
 class Price
 {
     private \DateTimeImmutable $date;
 
     private float $open;
 
-    private string $high;
+    private float $high;
 
-    private string $low;
+    private float $low;
 
-    private string $close;
+    private float $close;
 
-    private string $volume;
+    private int $volume;
+
+    private string $type = '';
 
     public function getDate(): \DateTimeImmutable
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeImmutable $date): self
+    public function setDate(\DateTimeImmutable|int $date): self
     {
+        if (is_int($date)) {
+            $date = new \DateTimeImmutable('@'.$date);
+        }
+
         $this->date = $date;
 
         return $this;
@@ -42,50 +49,62 @@ class Price
         return $this;
     }
 
-    public function getHigh(): string
+    public function getHigh(): float
     {
         return $this->high;
     }
 
-    public function setHigh(string $high): self
+    public function setHigh(float $high): self
     {
         $this->high = $high;
 
         return $this;
     }
 
-    public function getLow(): string
+    public function getLow(): float
     {
         return $this->low;
     }
 
-    public function setLow(string $low): self
+    public function setLow(float $low): self
     {
         $this->low = $low;
 
         return $this;
     }
 
-    public function getClose(): string
+    public function getClose(): float
     {
         return $this->close;
     }
 
-    public function setClose(string $close): self
+    public function setClose(float $close): self
     {
         $this->close = $close;
 
         return $this;
     }
 
-    public function getVolume(): string
+    public function getVolume(): int
     {
         return $this->volume;
     }
 
-    public function setVolume(string $volume): self
+    public function setVolume(int $volume): self
     {
         $this->volume = $volume;
+
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

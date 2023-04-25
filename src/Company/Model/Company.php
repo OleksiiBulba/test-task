@@ -6,6 +6,7 @@ namespace App\Company\Model;
 
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
+/** @codeCoverageIgnore */
 class Company implements \Stringable
 {
     #[SerializedName('Symbol')]
@@ -26,12 +27,12 @@ class Company implements \Stringable
         return $this;
     }
 
-    public function getCompanyName(): string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setCompanyName(string $name): self
+    public function setName(string $name): self
     {
         $this->name = $name;
 

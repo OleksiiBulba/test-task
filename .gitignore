@@ -1,4 +1,5 @@
 .idea
+html-coverage
 
 ###> symfony/framework-bundle ###
 /.env.local

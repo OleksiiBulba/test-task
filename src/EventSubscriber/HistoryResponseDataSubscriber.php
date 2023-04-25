@@ -2,7 +2,8 @@
 
 namespace App\EventSubscriber;
 
-use App\Event\HistoryResponseDataReady;
+use App\Company\Provider\CompanyProviderInterface;
+use App\Event\HistoryRequestFinished;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -15,6 +16,7 @@ readonly class HistoryResponseDataSubscriber implements EventSubscriberInterface
 
     public function __construct(
         private MailerInterface $mailer,
+        private CompanyProviderInterface $companyProvider,
         private string $fromAddress,
         private string $fromName
     ) {
@@ -23,20 +25,20 @@ readonly class HistoryResponseDataSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            HistoryResponseDataReady::class => 'sendEmailNotification',
+            HistoryRequestFinished::class => 'sendEmailNotification',
         ];
     }
 
-    public function sendEmailNotification(HistoryResponseDataReady $event): void
+    public function sendEmailNotification(HistoryRequestFinished $event): void
     {
         try {
             $this->mailer->send(
                 (new Email())
                     ->from(new Address($this->fromAddress, $this->fromName))
                     ->to($event->getRequest()->getEmail())
-                    ->subject($event->getResponse()->getCompany()->getCompanyName())
+                    ->subject($this->companyProvider->searchBySymbol($event->getRequest()->getSymbol())->getName())
                     ->text(sprintf(
-                        '%s to %s',
+                        'From %s to %s',
                         $event->getRequest()->getStartDate()->format(self::DATE_FORMAT),
                         $event->getRequest()->getEndDate()->format(self::DATE_FORMAT)
                     ))

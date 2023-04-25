@@ -4,24 +4,29 @@ namespace App\Controller;
 
 use App\Form\HistoryDataFormType;
 use App\Handler\HistoryRequestDataHandler;
-use App\Model\HistoryRequestData;
+use App\Model\HistoricalDataRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HistoryDataController extends AbstractController
+class HistoricalDataController extends AbstractController
 {
     #[Route('/', name: 'app_history_data')]
-    public function index(Request $request, HistoryRequestDataHandler $handler): Response
-    {
+    public function index(
+        Request $request,
+        HistoryRequestDataHandler $handler
+    ): Response {
         $form = $this->createForm(HistoryDataFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var HistoryRequestData $historyRequestData */
-            $historyRequestData = $form->getData();
-
-            $historyData = $handler->handle($historyRequestData);
+            /** @var HistoricalDataRequest $historicalRequestData */
+            $historicalRequestData = $form->getData();
+            try {
+                $historyData = $handler->handle($historicalRequestData);
+            } catch (\Throwable $e) {
+                $this->addFlash('danger', $e->getMessage());
+            }
         }
 
         return $this->render('history_data/index.html.twig', [

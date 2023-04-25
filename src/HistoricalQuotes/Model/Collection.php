@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Model\HistoricalQuotes;
+namespace App\HistoricalQuotes\Model;
 
+/** @codeCoverageIgnore */
 class Collection
 {
     /**

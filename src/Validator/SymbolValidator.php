@@ -25,10 +25,9 @@ class SymbolValidator extends ConstraintValidator
             return;
         }
 
-        foreach ($this->companyProvider->getAllCompanies() as $company) {
-            if ($value === $company->getSymbol()) {
-                return;
-            }
+        $company = $this->companyProvider->searchBySymbol($value);
+        if (null !== $company) {
+            return;
         }
 
         $this->context->buildViolation($constraint->unknownSymbolMessage)

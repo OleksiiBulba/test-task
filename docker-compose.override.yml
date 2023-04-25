@@ -29,6 +29,13 @@ services:
     volumes:
       - ./:/app
 
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "127.0.0.1:8081:1080"
+    environment:
+      MAILDEV_SMTP_PORT: 25
+
 ###> symfony/mailer ###
   mailer:
     image: schickling/mailcatcher

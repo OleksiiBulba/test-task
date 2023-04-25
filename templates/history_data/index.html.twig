@@ -2,6 +2,25 @@
 
 {% block title %}History data{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('chart') }}
+{% endblock %}
+
 {% block main %}
-    {% include 'components/_form.html.twig' with {form: mainForm} %}
+    <div class="row">
+        <div class="offset-md-4 col-md-4 offset-sm-3 col-sm-6">
+            {% include 'components/_form.html.twig' with {form: mainForm} %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            {% include 'components/history/_chart.html.twig' with {data: historyData.historicalQuotesCollection|default(null)} %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {% include 'components/history/_table.html.twig' with {data: historyData.historicalQuotesCollection|default(null)} %}
+        </div>
+    </div>
 {% endblock %}

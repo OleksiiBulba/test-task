@@ -1,0 +1,11 @@
+{% if data is not null and 0 < data.prices|length %}
+<div id="container" style="height: 600px;"></div>
+<script type="application/javascript">
+    const data = [
+        {% for row in data.prices %}
+            [Date.UTC({{ row.date.format('Y') }}, {{ row.date.format('m') }}, {{ row.date.format('d') }}), {{ row.open }}, {{ row.high }}, {{ row.low }}, {{ row.close }}],
+        {% endfor %}
+    ];
+    // [Date.UTC(2007, 8, 7), 22.75, 23.7, 22.69, 23.44],
+</script>
+{% endif %}

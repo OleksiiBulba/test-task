@@ -26,6 +26,22 @@ services:
     App\Company\Provider\CompanyProviderInterface:
         class: App\Company\Provider\DataHubCompanyProvider
 
-    App\HistoricalQuotes\Fetcher\RapidHistoricalDataFetcher:
+    App\HistoricalQuotes\Fetcher\HistoricalQuotesFetcherInterface:
+        class: App\HistoricalQuotes\Fetcher\RapidHistoricalDataFetcher
         arguments:
             $rapidApiKey: '%env(RAPID_API_KEY)%'
+
+    App\EventSubscriber\HistoryResponseDataSubscriber:
+        arguments:
+            $fromAddress: '%env(EMAIL_FROM_ADDRESS)%'
+            $fromName: '%env(EMAIL_FROM_NAME)%'
+
+    App\Cache\Company\Provider\CachedCompanyProvider:
+        decorates: App\Company\Provider\CompanyProviderInterface
+        arguments:
+            $companyProvider: '@App\Cache\Company\Provider\CachedCompanyProvider.inner'
+
+    App\Cache\HistoricalQuotes\Fetcher\CachedHistoricalQuotesFetcher:
+        decorates: App\HistoricalQuotes\Fetcher\HistoricalQuotesFetcherInterface
+        arguments:
+            $historicalQuotesFetcher: '@App\Cache\HistoricalQuotes\Fetcher\CachedHistoricalQuotesFetcher.inner'

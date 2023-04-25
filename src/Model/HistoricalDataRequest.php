@@ -7,15 +7,18 @@ namespace App\Model;
 use App\Validator\Symbol;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class HistoryRequestData
+/** @codeCoverageIgnore */
+class HistoricalDataRequest
 {
     #[Assert\NotBlank]
     #[Symbol]
     private string $symbol;
 
+    #[Assert\NotBlank]
     #[Assert\Range(maxMessage: 'Start date should be less or equal than end date.', maxPropertyPath: 'endDate')]
     private ?\DateTimeInterface $startDate = null;
 
+    #[Assert\NotBlank]
     #[Assert\Range(notInRangeMessage: 'End date should be between start date and today date.', minPropertyPath: 'startDate', max: 'today')]
     private ?\DateTimeInterface $endDate = null;
 

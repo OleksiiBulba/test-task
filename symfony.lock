@@ -8,6 +8,9 @@
             "ref": "64d8583af5ea57b7afa4aba4b159907f3a148b05"
         }
     },
+    "liip/functional-test-bundle": {
+        "version": "4.9.0"
+    },
     "phpunit/phpunit": {
         "version": "10.1",
         "recipe": {

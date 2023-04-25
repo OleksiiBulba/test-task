@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\HistoricalQuotes\Fetcher;
 
-use App\Model\HistoricalQuotes\Collection;
+use App\HistoricalQuotes\Model\Collection;
 
 interface HistoricalQuotesByDateRangeFetcherInterface
 {

@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\HistoricalQuotes\Fetcher;
 
 use App\HistoricalQuotes\Exception\HistoricalQuotesNotFoundException;
-use App\Model\HistoricalQuotes\Collection;
-use App\Model\HistoricalQuotes\Collection as HistoricalQuotesCollection;
+use App\HistoricalQuotes\Model\Collection;
+use App\HistoricalQuotes\Model\Collection as HistoricalQuotesCollection;
+use App\HistoricalQuotes\Model\Price;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -41,7 +42,7 @@ readonly class RapidHistoricalDataFetcher implements HistoricalQuotesFetcherInte
         try {
             $response = $this->client->request(
                 Request::METHOD_GET,
-                self::RAPID_API_HOST.self::RAPID_API_ENDPOINT_HISTORICAL_DATA,
+                'https://'.self::RAPID_API_HOST.self::RAPID_API_ENDPOINT_HISTORICAL_DATA,
                 [
                     'query' => $query,
                     'headers' => [
@@ -55,6 +56,12 @@ readonly class RapidHistoricalDataFetcher implements HistoricalQuotesFetcherInte
         }
 
         try {
+            /**
+             * TODO: we are loosing precising during json_decode:
+             * Compare values:
+             *      original 2.254300117492676 (15 digits)
+             *       decoded 2.2543001174927   (13 digits)
+             */
             /** @var HistoricalQuotesCollection $historyResponseData */
             $historyResponseData = $this->serializer->deserialize(
                 $response->getContent(),
@@ -68,6 +75,10 @@ readonly class RapidHistoricalDataFetcher implements HistoricalQuotesFetcherInte
         if (null === $historyResponseData) {
             throw new HistoricalQuotesNotFoundException();
         }
+
+        $historyResponseData->setPrices(array_filter($historyResponseData->getPrices(), function (Price $price) {
+            return '' === $price->getType();
+        }));
 
         return $historyResponseData;
     }

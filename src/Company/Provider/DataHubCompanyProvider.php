@@ -34,4 +34,15 @@ readonly class DataHubCompanyProvider implements CompanyProviderInterface
             throw new CouldNotLoadCompaniesException(sprintf('Company list is not available: %s', $e->getMessage()), $e->getCode(), $e);
         }
     }
+
+    public function searchBySymbol(string $symbol): ?Company
+    {
+        foreach ($this->getAllCompanies() as $company) {
+            if ($symbol === $company->getSymbol()) {
+                return $company;
+            }
+        }
+
+        return null;
+    }
 }

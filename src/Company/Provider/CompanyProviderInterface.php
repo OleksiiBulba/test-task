@@ -15,4 +15,6 @@ interface CompanyProviderInterface
      * @throws CouldNotLoadCompaniesException
      */
     public function getAllCompanies(): array;
+
+    public function searchBySymbol(string $symbol): ?Company;
 }

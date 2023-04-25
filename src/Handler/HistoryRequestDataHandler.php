@@ -4,37 +4,41 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use App\Event\HistoryResponseDataReady;
-use App\Model\HistoryRequestData;
-use App\Model\HistoryResponseData;
+use App\Event\HistoryRequestFinished;
+use App\HistoricalQuotes\Fetcher\HistoricalQuotesByDateRangeFetcherInterface;
+use App\Model\HistoricalDataRequest;
+use App\Model\HistoricalDataResponse;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 readonly class HistoryRequestDataHandler implements HistoryRequestDataHandlerInterface
 {
     public function __construct(
-        private EventDispatcherInterface $dispatcher
+        private EventDispatcherInterface $dispatcher,
+        private HistoricalQuotesByDateRangeFetcherInterface $quotesByDateRangeFetcher
     ) {
     }
 
-    public function handle(HistoryRequestData $request): HistoryResponseData
+    public function handle(HistoricalDataRequest $request): HistoricalDataResponse
     {
         // Step 1: Fetch history data from an external API.
-        $response = $this->fetchHistoryData($request);
+        $data = $this->quotesByDateRangeFetcher->fetchData(
+            $request->getSymbol(),
+            $request->getStartDate(),
+            $request->getEndDate()
+        );
+
+        $response = (new HistoricalDataResponse())
+            ->setHistoricalQuotesCollection($data);
 
         // Step 2: Dispatch event that history data is fetched and ready.
-        $this->dispatchHistoryDataReady($request, $response);
+        $this->dispatchHistoryDataReady($request);
 
         // Step 3: Return an object with data.
         return $response;
     }
 
-    private function fetchHistoryData(HistoryRequestData $request): HistoryResponseData
+    private function dispatchHistoryDataReady(HistoricalDataRequest $request): void
     {
-        return new HistoryResponseData(); // TODO: implement fetching historical data
-    }
-
-    private function dispatchHistoryDataReady(HistoryRequestData $request, HistoryResponseData $response): void
-    {
-        $this->dispatcher->dispatch(new HistoryResponseDataReady($request, $response));
+        $this->dispatcher->dispatch(new HistoryRequestFinished($request));
     }
 }

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\HistoricalQuotes\Fetcher;
 
-use App\Model\HistoricalQuotes\Collection;
-use App\Model\HistoricalQuotes\Price;
+use App\HistoricalQuotes\Exception\HistoricalQuotesNotFoundException;
+use App\HistoricalQuotes\Model\Collection;
+use App\HistoricalQuotes\Model\Price;
 
 readonly class HistoricalQuotesByDateRangeFetcher implements HistoricalQuotesByDateRangeFetcherInterface
 {
@@ -13,7 +14,10 @@ readonly class HistoricalQuotesByDateRangeFetcher implements HistoricalQuotesByD
     {
     }
 
-    public function fetchData(string $symbol, \DateTimeInterface $from, \DateTimeInterface $to, string $region = ''): Collection
+    /**
+     * @throws HistoricalQuotesNotFoundException
+     */
+    public function fetchData(string $symbol, \DateTimeInterface $from, \DateTimeInterface $to, string $region = null): Collection
     {
         $historicalQuotesCollection = $this->historicalQuotesFetcher->fetchData($symbol, $region);
 
