@@ -43,7 +43,7 @@ readonly class CachedHistoricalQuotesFetcher implements HistoricalQuotesFetcherI
         $data = $this->doFetchData($symbol, $region);
         $item->set($data);
         $item->expiresAfter(self::EXPIRES_AFTER);
-        $this->cacheItemPool->saveDeferred($item);
+        $this->cacheItemPool->save($item);
 
         return $data;
     }

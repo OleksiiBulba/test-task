@@ -54,7 +54,7 @@ readonly class CachedCompanyProvider implements CompanyProviderInterface
         $companies = $this->getIndexedCompanies();
         $item->set($companies);
         $item->expiresAfter(self::EXPIRES_AFTER);
-        $this->cacheItemPool->saveDeferred($item);
+        $this->cacheItemPool->save($item);
 
         return $companies;
     }
