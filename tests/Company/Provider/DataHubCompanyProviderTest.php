@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Company\Provider;
 
+use App\Company\Exception\CouldNotLoadCompaniesException;
 use App\Company\Model\Company;
 use App\Company\Provider\DataHubCompanyProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -68,6 +69,18 @@ class DataHubCompanyProviderTest extends TestCase
         $this->assertEquals($expectedCompaniesList, $this->model->getAllCompanies());
     }
 
+    public function testCompaniesAreNotAvailable(): void
+    {
+        $this->httpClientMock->expects($this->once())
+            ->method('request')
+            ->willThrowException(new \Exception('Not available'));
+
+        $this->expectException(CouldNotLoadCompaniesException::class);
+        $this->expectExceptionMessage('Company list is not available: Not available');
+
+        $this->model->getAllCompanies();
+    }
+
     public static function getAllCompaniesDataProvider(): array
     {
         $companiesData = [
@@ -80,6 +93,53 @@ class DataHubCompanyProviderTest extends TestCase
                 'expectedCompaniesList' => [...self::createCompanies($companiesData)],
                 'serializedCompaniesList' => self::createSerializedCompaniesList($companiesData),
             ],
+        ];
+    }
+
+    /**
+     * @param Company[] $expectedCompaniesList
+     *
+     * @dataProvider searchBySymbolDataProvider
+     */
+    public function testSearchBySymbol(
+        ?Company $expectedCompany,
+        string $symbol,
+        array $expectedCompaniesList,
+        string $serializedCompaniesList
+    ): void {
+        $this->httpClientMock->expects($this->once())
+            ->method('request')
+            ->with(Request::METHOD_GET, DataHubCompanyProvider::API_URL)
+            ->willReturn($this->responseStub);
+
+        $this->responseStub->method('getContent')
+            ->willReturn($serializedCompaniesList);
+
+        $this->serializerMock->expects($this->once())
+            ->method('deserialize')
+            ->with($serializedCompaniesList, Company::class.'[]', JsonEncoder::FORMAT)
+            ->willReturn($expectedCompaniesList);
+
+        $this->assertEquals($expectedCompany, $this->model->searchBySymbol($symbol));
+    }
+
+    public static function searchBySymbolDataProvider(): array
+    {
+        $company = (new Company())->setName('AAA Company')->setSymbol('AAA');
+
+        return [
+            [
+                'expectedCompany' => $company,
+                'symbol' => 'AAA',
+                'expectedCompaniesList' => [$company],
+                'serializedCompaniesList' => '[{"Company Name":"AAA Company","Symbol":"AAA"}]',
+            ],
+            [
+                'expectedCompany' => null,
+                'symbol' => 'BBB',
+                'expectedCompaniesList' => [$company],
+                'serializedCompaniesList' => '[{"Company Name":"AAA Company","Symbol":"AAA"}]',
+            ]
         ];
     }
 
