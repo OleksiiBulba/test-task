@@ -183,7 +183,7 @@ class HistoricalDataControllerTest extends WebTestCase
     {
         $this->kernelBrowser->request(Request::METHOD_GET, '/');
 
-        $this->kernelBrowser->getContainer()->set('test.'.MailerInterface::class, new class implements MailerInterface {
+        $this->kernelBrowser->getContainer()->set('test.'.MailerInterface::class, new class() implements MailerInterface {
             public function send(RawMessage $message, Envelope $envelope = null): void
             {
                 throw new TransportException('Cannot send email');

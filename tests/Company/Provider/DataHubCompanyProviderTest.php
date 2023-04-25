@@ -139,7 +139,7 @@ class DataHubCompanyProviderTest extends TestCase
                 'symbol' => 'BBB',
                 'expectedCompaniesList' => [$company],
                 'serializedCompaniesList' => '[{"Company Name":"AAA Company","Symbol":"AAA"}]',
-            ]
+            ],
         ];
     }
 

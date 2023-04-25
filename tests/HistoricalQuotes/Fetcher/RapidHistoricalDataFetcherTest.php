@@ -86,7 +86,7 @@ class RapidHistoricalDataFetcherTest extends TestCase
         $this->assertEquals($expectedCollection, $this->model->fetchData($symbol, $region));
     }
 
-    public static function fetchDataDataProvider():array
+    public static function fetchDataDataProvider(): array
     {
         $collection = (new HistoricalQuotesCollection())
             ->setPrices([
@@ -151,7 +151,6 @@ class RapidHistoricalDataFetcherTest extends TestCase
             }
             QUOTES;
 
-
         return [
             [
                 'expectedCollection' => $collection,
@@ -171,7 +170,7 @@ class RapidHistoricalDataFetcherTest extends TestCase
                     'symbol' => 'AAPL',
                     'region' => 'US',
                 ],
-            ]
+            ],
         ];
     }
 
@@ -233,7 +232,7 @@ class RapidHistoricalDataFetcherTest extends TestCase
         $this->model->fetchData($symbol, $region);
     }
 
-    public static function fetchDataWithHistoricalQuotesNotFoundExceptionDataProvider():array
+    public static function fetchDataWithHistoricalQuotesNotFoundExceptionDataProvider(): array
     {
         $serialized = <<<QUOTES
             {
@@ -297,7 +296,7 @@ class RapidHistoricalDataFetcherTest extends TestCase
                     'symbol' => 'AAPL',
                     'region' => 'US',
                 ],
-            ]
+            ],
         ];
     }
 }
