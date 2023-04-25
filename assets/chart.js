@@ -4,6 +4,10 @@
 import anychart from 'anychart';
 
 $(document).ready(function () {
+    if (0 === data.length) {
+        return;
+    }
+
     // create a chart
     const chart = anychart.candlestick();
 
