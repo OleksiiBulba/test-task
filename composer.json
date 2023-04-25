@@ -1,4 +1,6 @@
 {
+    "name": "oleksiibulba/test-task",
+    "description": "Test task implementation for a task v21.0.5",
     "license": "proprietary",
     "type": "project",
     "require": {

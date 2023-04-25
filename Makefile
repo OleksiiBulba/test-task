@@ -29,8 +29,8 @@ yarn: ## Run yarn, pass the parameter "c=" to run a given command, example: make
 front-dev: ## Starting the frontend developer mode.
 	@$(YARN) watch
 
-test: ## Run all tests from `phpunit.xml`
-	@$(PHP_CONT) php vendor/bin/phpunit --verbose
+test: ## Run all tests
+	@$(PHP_CONT) composer tests
 
 up: ## Run made application
 	XDEBUG_MODE=debug $(DOCKER_COMP) up --detach
@@ -56,6 +56,8 @@ composer: ## Run composer, pass the parameter "c=" to run a given command, examp
 vendor: ## composer install dependencies
 vendor: c=install --prefer-dist --no-dev --no-progress --no-scripts --no-interaction
 vendor: composer
+
+install: vendor ## composer install dependencies (alias with `make vendor` command)
 
 symfony: ## List all Symfony commands or pass the parameter "c=" to run a given command, example: make symfony c=about
 	@$(eval c ?=)
