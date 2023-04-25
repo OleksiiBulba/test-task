@@ -12,7 +12,7 @@ use Symfony\Component\Mime\Email;
 
 readonly class HistoryResponseDataSubscriber implements EventSubscriberInterface
 {
-    const DATE_FORMAT = 'Y-m-d';
+    private const DATE_FORMAT = 'Y-m-d';
 
     public function __construct(
         private MailerInterface $mailer,

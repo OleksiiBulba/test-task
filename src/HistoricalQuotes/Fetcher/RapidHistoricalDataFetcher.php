@@ -16,10 +16,10 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 readonly class RapidHistoricalDataFetcher implements HistoricalQuotesFetcherInterface
 {
-    const RAPID_API_HOST = 'yh-finance.p.rapidapi.com';
-    const RAPID_API_ENDPOINT_HISTORICAL_DATA = '/stock/v3/get-historical-data';
-    const RAPID_HEADER_API_KEY = 'X-RapidAPI-Key';
-    const RAPID_HEADER_API_HOST = 'X-RapidAPI-Host';
+    private const RAPID_API_HOST = 'yh-finance.p.rapidapi.com';
+    private const RAPID_API_ENDPOINT_HISTORICAL_DATA = '/stock/v3/get-historical-data';
+    private const RAPID_HEADER_API_KEY = 'X-RapidAPI-Key';
+    private const RAPID_HEADER_API_HOST = 'X-RapidAPI-Host';
 
     public function __construct(
         private HttpClientInterface $client,
@@ -60,7 +60,7 @@ readonly class RapidHistoricalDataFetcher implements HistoricalQuotesFetcherInte
              * TODO: we are loosing precising during json_decode:
              * Compare values:
              *      original 2.254300117492676 (15 digits)
-             *       decoded 2.2543001174927   (13 digits)
+             *       decoded 2.2543001174927   (13 digits).
              */
             /** @var HistoricalQuotesCollection $historyResponseData */
             $historyResponseData = $this->serializer->deserialize(

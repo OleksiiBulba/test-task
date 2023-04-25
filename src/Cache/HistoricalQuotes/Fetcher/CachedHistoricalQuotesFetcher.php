@@ -13,7 +13,7 @@ readonly class CachedHistoricalQuotesFetcher implements HistoricalQuotesFetcherI
 {
     private const CACHE_KEY_PREFIX = 'CachedHistoricalQuotesFetcherDecorator-fetchData-';
 
-    const EXPIRES_AFTER = 3600; // 1 hour
+    private const EXPIRES_AFTER = 3600; // 1 hour
 
     public function __construct(
         private HistoricalQuotesFetcherInterface $historicalQuotesFetcher,
@@ -29,7 +29,6 @@ readonly class CachedHistoricalQuotesFetcher implements HistoricalQuotesFetcherI
         try {
             $item = $this->cacheItemPool->getItem($this->getCacheKey($symbol, $region));
         } catch (InvalidArgumentException) {
-            /** @codeCoverageIgnore */
             return $this->doFetchData($symbol, $region);
         }
 
@@ -52,9 +51,9 @@ readonly class CachedHistoricalQuotesFetcher implements HistoricalQuotesFetcherI
 
     private function getCacheKey(string $symbol, ?string $region): string
     {
-        $cacheKey = self::CACHE_KEY_PREFIX . $symbol;
+        $cacheKey = self::CACHE_KEY_PREFIX.$symbol;
         if (null !== $region) {
-            $cacheKey .= '-' . $region;
+            $cacheKey .= '-'.$region;
         }
 
         return $cacheKey;

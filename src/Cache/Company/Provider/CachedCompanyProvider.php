@@ -11,9 +11,9 @@ use Psr\Cache\InvalidArgumentException;
 
 readonly class CachedCompanyProvider implements CompanyProviderInterface
 {
-    const CACHE_KEY = 'CachedCompanyProvider-getAllCompanies';
+    private const CACHE_KEY = 'CachedCompanyProvider-getAllCompanies';
 
-    const EXPIRES_AFTER = 3600; // 1 hour
+    private const EXPIRES_AFTER = 3600; // 1 hour
 
     public function __construct(private CompanyProviderInterface $companyProvider, private CacheItemPoolInterface $cacheItemPool)
     {
@@ -42,7 +42,6 @@ readonly class CachedCompanyProvider implements CompanyProviderInterface
         try {
             $item = $this->cacheItemPool->getItem(self::CACHE_KEY);
         } catch (InvalidArgumentException) {
-            /** @codeCoverageIgnore */
             return $this->getIndexedCompanies();
         }
 
